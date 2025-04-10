@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
+const Table = require("cli-table3");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -168,9 +169,53 @@ async function pingAllServers() {
     pingServer(SOCKET_SERVER_URL, "Socket Server", "socketServer"),
   ]);
 
-  // Display results in tabular format
-  console.table(pingResults);
+  // Create formatted table for console output
+  const table = new Table({
+    head: [
+      "Server",
+      "Status",
+      "Response Time",
+      "Last Ping",
+      "Uptime",
+      "Resource Usage",
+      "URL",
+    ],
+    colWidths: [15, 10, 15, 25, 10, 20, 50],
+  });
 
+  // Add data rows to the table
+  table.push(
+    [
+      "Main Server",
+      pingResults.mainServer.status,
+      `${pingResults.mainServer.responseTime}ms`,
+      pingResults.mainServer.lastPing || "N/A",
+      pingResults.mainServer.uptime,
+      pingResults.mainServer.resourceUsage,
+      pingResults.mainServer.url,
+    ],
+    [
+      "Proxy Server",
+      pingResults.proxyServer.status,
+      `${pingResults.proxyServer.responseTime}ms`,
+      pingResults.proxyServer.lastPing || "N/A",
+      pingResults.proxyServer.uptime,
+      pingResults.proxyServer.resourceUsage,
+      pingResults.proxyServer.url,
+    ],
+    [
+      "Socket Server",
+      pingResults.socketServer.status,
+      `${pingResults.socketServer.responseTime}ms`,
+      pingResults.socketServer.lastPing || "N/A",
+      pingResults.socketServer.uptime,
+      pingResults.socketServer.resourceUsage,
+      pingResults.socketServer.url,
+    ]
+  );
+
+  // Display the formatted table
+  console.log(table.toString());
   console.log("─────────────────────────────────────────");
 }
 
