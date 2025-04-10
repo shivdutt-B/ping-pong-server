@@ -180,8 +180,15 @@ async function pingAllServers() {
       "Resource Usage",
       "URL",
     ],
-    colWidths: [15, 10, 15, 25, 10, 20, 50],
+    colWidths: [15, 10, 15, 25, 8, 16, 50],
   });
+
+  // Function to format ISO date to local date and time
+  const formatLocalDateTime = (isoString) => {
+    if (!isoString) return "N/A";
+    const date = new Date(isoString);
+    return date.toLocaleString();
+  };
 
   // Add data rows to the table
   table.push(
@@ -189,7 +196,7 @@ async function pingAllServers() {
       "Main Server",
       pingResults.mainServer.status,
       `${pingResults.mainServer.responseTime}ms`,
-      pingResults.mainServer.lastPing || "N/A",
+      formatLocalDateTime(pingResults.mainServer.lastPing),
       pingResults.mainServer.uptime,
       pingResults.mainServer.resourceUsage,
       pingResults.mainServer.url,
@@ -198,7 +205,7 @@ async function pingAllServers() {
       "Proxy Server",
       pingResults.proxyServer.status,
       `${pingResults.proxyServer.responseTime}ms`,
-      pingResults.proxyServer.lastPing || "N/A",
+      formatLocalDateTime(pingResults.proxyServer.lastPing),
       pingResults.proxyServer.uptime,
       pingResults.proxyServer.resourceUsage,
       pingResults.proxyServer.url,
@@ -207,7 +214,7 @@ async function pingAllServers() {
       "Socket Server",
       pingResults.socketServer.status,
       `${pingResults.socketServer.responseTime}ms`,
-      pingResults.socketServer.lastPing || "N/A",
+      formatLocalDateTime(pingResults.socketServer.lastPing),
       pingResults.socketServer.uptime,
       pingResults.socketServer.resourceUsage,
       pingResults.socketServer.url,
